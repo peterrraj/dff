@@ -19,7 +19,7 @@ class ScannerImpl : public Scanner
   public:
     ScannerImpl(
       MainWindow* aOwner,
-      uint aThreads = 4)
+      uint aThreads = 0)
     : Scanner(aThreads), Owner(aOwner) {};
 };
 //------------------------------------------------------------------------------

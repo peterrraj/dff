@@ -32,6 +32,8 @@ class MutexLock
 
 Scanner::Scanner(uint aMaxThreadCount) : MaxThreadCount(aMaxThreadCount)
 {
+  if (MaxThreadCount == 0)
+    MaxThreadCount = std::thread::hardware_concurrency();
 }
 //------------------------------------------------------------------------------
 
