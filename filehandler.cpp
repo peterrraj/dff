@@ -127,7 +127,7 @@ bool FileHandler::operator==(FileHandler& aOther)
   catch(...)
   {
     HasFailed = true;
-    Error("Failed to compare: " + FileName);
+    Error("Failed to compare: " + FileName + " to " + aOther.FileName);
   }
   return false;
 }
