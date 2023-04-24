@@ -60,7 +60,7 @@ class Scanner : public FolderScanner
     virtual std::string IToS(uint aInt);
 
   public:
-    Scanner(uint aMaxThreadCount = 4);
+    Scanner(uint aMaxThreadCount = 0);
     ~Scanner();
 
     std::set<ulong>        GetGroups();
