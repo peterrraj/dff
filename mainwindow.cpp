@@ -1,3 +1,4 @@
+#include "globals.h"
 #include "scanner.h"
 #include "mainwindow.h"
 #include "errorreporter.h"
@@ -418,7 +419,7 @@ void MainWindow::DoScan()
   std::map<ulong,std::vector<ulong>>::reverse_iterator IT;
   for (IT = SortBySize.rbegin(); IT != SortBySize.rend(); IT++)
   {
-    if (TotalGroups > 2500)
+    if (TotalGroups > MAX_DUPLICATE_GROUPS)
       break;
 
     SetStatus("Publishing the records of group " + ToHRFormat(TotalGroups));
