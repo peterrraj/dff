@@ -3,6 +3,7 @@
 #include <vector>
 //------------------------------------------------------------------------------
 
+#include "globals.h"
 #include "scanner.h"
 //------------------------------------------------------------------------------
 
@@ -118,7 +119,7 @@ void Scanner::ProcessingUpdate()
 void Scanner::Compare()
 {
   // Prepare the progress iterator
-  ProcessingIT = AllFiles.begin();
+  ProcessingIT = AllFiles.end();
 
   // Start the threads
   std::vector<std::thread> Threads;
@@ -136,7 +137,9 @@ void Scanner::Compare()
   {
     {
       MutexLock Lock(MLock);
-      if (ProcessingIT == AllFiles.end())
+      if (ProcessingIT == AllFiles.begin())
+        break;
+      if (DuplicateGroups.size() > 2500)
         break;
     }
     ProcessingUpdate();
@@ -269,12 +272,16 @@ std::set<FileHandler*>& Scanner::GetNextSet()
 
   MutexLock Lock(MLock);
 
+  // Stop if the maximum number of duplicate groups is reached
+  if (DuplicateGroups.size() > MAX_DUPLICATE_GROUPS)
+    return EmptySet;
+
   // Skip all sets with one file
-  while(ProcessingIT != AllFiles.end() && ProcessingIT->second.size() < 2)
-    ProcessingIT++;
+  while(ProcessingIT != AllFiles.begin() && (--ProcessingIT)->second.size() < 2)
+    ;
 
   // Still something to process?
-  if (ProcessingIT == AllFiles.end())
+  if (ProcessingIT == AllFiles.begin())
     return EmptySet;
 
   // Progress report
@@ -283,7 +290,7 @@ std::set<FileHandler*>& Scanner::GetNextSet()
     " files of size " + IToS(ProcessingIT->first)
   );
 
-  return (ProcessingIT++)->second;
+  return ProcessingIT->second;
 }
 //------------------------------------------------------------------------------
 
