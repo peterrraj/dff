@@ -287,7 +287,8 @@ std::set<FileHandler*>& Scanner::GetNextSet()
   // Progress report
   SetState(
     "Comparing " + IToS(ProcessingIT->second.size()) +
-    " files of size " + IToS(ProcessingIT->first)
+    " files of size " + IToS(ProcessingIT->first) +
+    ", " + std::to_string(DuplicateGroups.size()) + " duplicate groups"
   );
 
   return ProcessingIT->second;
