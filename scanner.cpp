@@ -93,9 +93,10 @@ bool Scanner::OnFolder(const std::string& aFolder)
   SetState("Scanning " + aFolder);
   ProcessingUpdate();
 
+  const std::string Folder = aFolder + "/";
   for(const std::string& Ignore: FoldersToIgnore)
   {
-    if (aFolder.find(Ignore) != std::string::npos)
+    if (Folder.find(Ignore) != std::string::npos)
       return false;
   }
   return true;
