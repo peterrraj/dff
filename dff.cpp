@@ -7,7 +7,7 @@ int main(int argc, char** argv)
   argc = 1;
   Glib::RefPtr<Gtk::Application> application =
     Gtk::Application::create(argc, argv);
-  MainWindow MW;
+  MainWindow MW(argv[0]);
   return application->run(MW);
 }
 //------------------------------------------------------------------------------
