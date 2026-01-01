@@ -744,7 +744,6 @@ void MainWindow::CleanupEmptyGroups()
 
   for (Gtk::Widget* W: ToDelete)
   {
-    TotalFiles--;
     Duplicates.remove(*W);
     delete W;
   }
