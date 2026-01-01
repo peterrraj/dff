@@ -307,7 +307,7 @@ bool MainWindow::BtnDeleteHandler(GdkEventButton*)
 {
   uint Errors = 0;
 
-  // The for workrs in reverse so it actually starts with the last element
+  // The for works in reverse so it actually starts with the last element
   // and traverses back to the first
   uint FilesInTheGroup = 0;
   std::vector<Gtk::CheckButton*> ToDeleteW;
@@ -353,6 +353,8 @@ bool MainWindow::BtnDeleteHandler(GdkEventButton*)
           else
           {
             Duplicates.remove(*B);
+            TotalFiles--;
+            TotalLost -= FileSizes[B->get_label()];
             delete B;
           }
         }
@@ -454,7 +456,8 @@ void MainWindow::DoScan()
       for (FileHandler* F: Scanner.GetFiles(GroupID))
       {
         TotalFiles++;
-        if (FirstInGroup)
+        // Add all but the first as the "lost" means the duplicates
+        if (!FirstInGroup)
           TotalLost += Sz;
         FirstInGroup = false;
 
@@ -727,6 +730,7 @@ void MainWindow::CleanupEmptyGroups()
     {
       if (InTheGroup.size() < 2)
       {
+        TotalGroups--;
         ToDelete.insert(L);
         for(Gtk::Widget* W2: InTheGroup)
           ToDelete.insert(W2);
@@ -740,6 +744,7 @@ void MainWindow::CleanupEmptyGroups()
 
   for (Gtk::Widget* W: ToDelete)
   {
+    TotalFiles--;
     Duplicates.remove(*W);
     delete W;
   }
