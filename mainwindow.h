@@ -113,10 +113,12 @@ class MainWindow : public Gtk::Window
       Gtk::ButtonsType aButtons
     );
 
+    void LoadDefaults(const std::string& aAppName);
+
     virtual bool on_delete_event(GdkEventAny* any_event);
 
   public:
-    MainWindow();
+    MainWindow(const std::string& aAppName);
 
     void SetStatus(const std::string& aNewStatus);
 

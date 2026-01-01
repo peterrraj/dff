@@ -1,3 +1,6 @@
+#include <fstream>
+//------------------------------------------------------------------------------
+
 #include "globals.h"
 #include "scanner.h"
 #include "mainwindow.h"
@@ -26,7 +29,9 @@ class ScannerImpl : public Scanner
 //------------------------------------------------------------------------------
 
 
-MainWindow::MainWindow() : Window(), ResultsBox(true, 0)
+MainWindow::MainWindow(const std::string& aAppName) : 
+  Window(),
+  ResultsBox(true, 0)
 {
   add(ViewPort);
   ViewPort.pack_start(FoldersArea, false, true, 0);
@@ -150,6 +155,8 @@ MainWindow::MainWindow() : Window(), ResultsBox(true, 0)
   set_title("DFF - Duplicate File Finder");
   resize(720, 480);
   show_all();
+
+  LoadDefaults(aAppName);
 }
 //------------------------------------------------------------------------------
 
@@ -188,6 +195,16 @@ int MainWindow::MessageBox(
   Dlg.set_secondary_text(aText);
   Dlg.set_modal(true);
   return Dlg.run();
+}
+//------------------------------------------------------------------------------
+
+void MainWindow::LoadDefaults(const std::string& aAppName)
+{
+  // The logic is simple - use the command line and add .ignore
+  std::string CfgName = aAppName + ".ignore";
+  std::ifstream In(CfgName.c_str());
+  for (std::string Line; getline(In, Line); )
+    AddIgnore(Line);
 }
 //------------------------------------------------------------------------------
 
