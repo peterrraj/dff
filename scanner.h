@@ -43,7 +43,6 @@ class Scanner : public FolderScanner
     // Called by the DoProcessing method to register duplicated file
     void RegisterDuplicate(FileHandler* aElement1, FileHandler* aElement2);
 
-    void Scan(const std::string& aFolder);
     void Compare();
 
     std::mutex MState;
@@ -68,7 +67,7 @@ class Scanner : public FolderScanner
     ulong                  GetSizes(ulong aID);
 
     void Run(const std::string& aBaseFolder);
-    void Run(std::set<std::string> aFoldersToScan);
+    void Run(const std::set<std::string>& aFoldersToScan);
 
     void IgnoreFolder(const std::string& aFolderToIgnore);
 
