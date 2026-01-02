@@ -235,7 +235,7 @@ bool MainWindow::BtnLinkHandler(GdkEventButton*)
   {
     uint Links = 0;
     uint Groups = 0;
-    bool Ignore = false;     // True if more than one file in a grup is unselected
+    bool Ignore = false;   // True if more than one file in a grup is unselected
     Gtk::CheckButton* FileToLinkTo = NULL;
     std::vector<Gtk::CheckButton*> FilesToLink;
     for (Gtk::Widget* W: Duplicates.get_children())
@@ -441,13 +441,17 @@ void MainWindow::DoScan()
     if (TotalGroups > MAX_DUPLICATE_GROUPS)
       break;
 
-    SetStatus("Publishing the records of group " + ToHRFormat(TotalGroups));
+    uint SubGroup = 0;
     for (ulong GroupID: IT->second)
     {
       TotalGroups++;
 
+      SetStatus("Publishing the records of group " + ToHRFormat(TotalGroups));
+
       ulong Sz = Scanner.GetSizes(GroupID);
-      Gtk::Label* Lbl = Gtk::manage(new Gtk::Label("  " + ToHRFormat(Sz)));
+      Gtk::Label* Lbl = Gtk::manage(
+        new Gtk::Label("  " + ToHRFormat(Sz) + ":" + std::to_string(++SubGroup))
+      );
       Lbl->set_xalign(0.0);
       Duplicates.attach(*Lbl, 0, Index++);
 
@@ -461,8 +465,12 @@ void MainWindow::DoScan()
           TotalLost += Sz;
         FirstInGroup = false;
 
-        Gtk::CheckButton *Btn = Gtk::manage(new Gtk::CheckButton(F->GetFileName()));
-        Btn->signal_toggled().connect(sigc::mem_fun(*this, &MainWindow::HandleToggle));
+        Gtk::CheckButton *Btn = Gtk::manage(
+          new Gtk::CheckButton(F->GetFileName())
+        );
+        Btn->signal_toggled().connect(
+          sigc::mem_fun(*this, &MainWindow::HandleToggle)
+        );
         // Add the Button to the set so it gets sorted
         GroupSorted[F->GetFileName()] = Btn;
 
