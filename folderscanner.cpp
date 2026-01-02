@@ -34,6 +34,9 @@ void FolderScanner::OnFolderError(const std::string& aFolder)
 
 void FolderScanner::Scan(const std::string& aFolder)
 {
+  if (!OnFolder(aFolder))
+    return;
+
   DIR* d_fh;
   struct dirent* entry;
 
@@ -60,7 +63,6 @@ void FolderScanner::Scan(const std::string& aFolder)
           if (strcmp(entry->d_name, "..") == 0 ||
               strcmp(entry->d_name, ".") == 0)
             continue;
-          if (OnFolder(Entry))
             Scan(Entry);
           break;
         case DT_REG:
