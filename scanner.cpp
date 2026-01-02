@@ -44,12 +44,6 @@ Scanner::~Scanner()
 }
 //------------------------------------------------------------------------------
 
-void Scanner::Scan(const std::string& aFolder)
-{
-  FolderScanner::Scan(aFolder);
-}
-//------------------------------------------------------------------------------
-
 void Scanner::Cleanup()
 {
   FCount = 0;
@@ -164,7 +158,7 @@ void Scanner::Run(const std::string& aBaseFolder)
 }
 //------------------------------------------------------------------------------
 
-void Scanner::Run(std::set<std::string> aFoldersToScan)
+void Scanner::Run(const std::set<std::string>& aFoldersToScan)
 {
   Cleanup();
   for (std::string Folder : aFoldersToScan)
@@ -271,6 +265,10 @@ std::set<FileHandler*>& Scanner::GetNextSet()
 
   MutexLock Lock(MLock);
 
+  // Still something to process?
+  if (ProcessingIT == AllFiles.begin())
+    return EmptySet;
+
   // Stop if the maximum number of duplicate groups is reached
   if (DuplicateGroups.size() > MAX_DUPLICATE_GROUPS)
     return EmptySet;
@@ -278,10 +276,6 @@ std::set<FileHandler*>& Scanner::GetNextSet()
   // Skip all sets with one file
   while(ProcessingIT != AllFiles.begin() && (--ProcessingIT)->second.size() < 2)
     ;
-
-  // Still something to process?
-  if (ProcessingIT == AllFiles.begin())
-    return EmptySet;
 
   // Progress report
   SetState(
